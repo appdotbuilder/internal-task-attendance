@@ -1,10 +1,21 @@
 
+import { db } from '../db';
+import { attachmentsTable } from '../db/schema';
 import { type DeleteAttachmentInput } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export const deleteAttachment = async (input: DeleteAttachmentInput): Promise<boolean> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is deleting a specific attachment from the database.
-    // It should return true if the attachment was successfully deleted, false if the attachment was not found.
-    // This should also handle cleaning up the actual file from storage if implemented.
-    return Promise.resolve(true);
+  try {
+    // Delete the attachment record
+    const result = await db.delete(attachmentsTable)
+      .where(eq(attachmentsTable.id, input.id))
+      .returning()
+      .execute();
+
+    // Return true if a record was deleted, false if not found
+    return result.length > 0;
+  } catch (error) {
+    console.error('Attachment deletion failed:', error);
+    throw error;
+  }
 };

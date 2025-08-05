@@ -1,9 +1,19 @@
 
+import { db } from '../db';
+import { attachmentsTable } from '../db/schema';
 import { type GetAttachmentsByTaskInput, type Attachment } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export const getAttachmentsByTask = async (input: GetAttachmentsByTaskInput): Promise<Attachment[]> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is fetching all attachments for a specific task from the database.
-    // It should return an array of attachments associated with the given task_id.
-    return [];
+  try {
+    const results = await db.select()
+      .from(attachmentsTable)
+      .where(eq(attachmentsTable.task_id, input.task_id))
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Failed to get attachments by task:', error);
+    throw error;
+  }
 };

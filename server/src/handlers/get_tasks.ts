@@ -1,9 +1,17 @@
 
+import { db } from '../db';
+import { tasksTable } from '../db/schema';
 import { type Task } from '../schema';
 
 export const getTasks = async (): Promise<Task[]> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is fetching all tasks from the database.
-    // It should return an array of all tasks with their current status and details.
-    return [];
+  try {
+    const results = await db.select()
+      .from(tasksTable)
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Failed to fetch tasks:', error);
+    throw error;
+  }
 };
